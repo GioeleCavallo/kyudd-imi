@@ -1,0 +1,9 @@
+<%- include('template/header'); %>
+    
+    <% if(typeof username != "undefined" && username) { %>
+        <p>Bentornato <%= username %>, sei  <%= tipo %></p>
+    <% }else{ %>
+        <p>Benvenuto, esegui il <a href="/login">login</a> :)</p>
+    <% } %>
+
+<%- include('template/footer'); %>

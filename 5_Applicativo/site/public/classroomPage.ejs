@@ -1,0 +1,52 @@
+<%- include('template/header'); %>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+
+    <h1 id="title" class="title-color"></h1>
+    <hr class="big-line">
+    <br><br>
+    <h1 id="subtitle">Stati aula</h1>
+    <hr class="normal-line">
+    
+    <table id="data-table" class="display">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Stato</th>
+                <th>Data</th>
+                <th>Finestra</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <% if(classroom) { %>
+        <script>
+            const CLASSROOM = "<%= classroom %>" ;
+        </script>
+        <% } %>
+
+
+        <script>
+
+        $(document).ready(function () {
+            $("#title").text(`Aula ${CLASSROOM}`);
+            
+            
+            function updateTable() {
+                let columns = JSON.parse('[{"data": "id"}, {"data": "stato"}, {"data": "timestamp"}, {"data": "finestra_numero"}]');
+                createTable('#data-table',columns,`/classroom/${CLASSROOM}`);
+                //console.log(columns);
+
+            }
+            updateTable();
+           
+        });
+    </script>
+    <%- include('template/footer'); %>

@@ -1,0 +1,18 @@
+<%- include('template/header'); %>
+
+    <div class="center">
+        <form action="/login" method="post">
+            <h1 class="title-color">Login</h1>
+            
+            <hr class="big-line">
+        
+            <div class="input-field">
+                <input type="text" name="username" id="username" placeholder="Enter Username" class="input-text" required>
+            </div>
+            <div class="input-field">
+                <input type="password" name="password" id="password" placeholder="Enter Password" class="input-text" required>
+            </div>
+            <input type="submit" value="Login" class="button-form">
+        </form>
+    </div>
+<%- include('template/footer'); %>

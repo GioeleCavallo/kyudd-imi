@@ -1,0 +1,75 @@
+<%- include('template/header'); %>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+<h1 id="title" class="title-color">Stati finestre</h1>
+<hr class="big-line">
+<label><input type="checkbox" id="checkBox">Solo finestre aperte</label>
+<label for="floor">Piano:</label>
+<select id="floors" name="floor">
+    <option value="All">Tutti</option>
+    <option value="0">Terra</option>
+    <option value="1">Primo</option>
+    <option value="2">Secondo</option>
+    <option value="3">Terzo</option>
+    <option value="4">Quarto</option>
+</select>
+<table id="data-table" class="display table-css">
+    <thead>
+        <tr>
+            <th>Finestra</th>
+            <th>Aula</th>
+            <th>Stato</th>
+            <th>Ultimo cambiamento</th>
+            <th>Dispositivo</th>
+            <th>Info</th>
+        </tr>
+    </thead>
+    <tbody>
+       
+    </tbody>
+</table>
+<script>
+    
+$(document).ready( function () {
+
+
+    function updateTable($url) {
+        let columns = JSON.parse('[{"data": "numero"}, {"data": "aula"}, {"data": "stato"}, {"data": "timestamp"}, {"data": "sensore_id"}, {"data": "link"}]');
+        createTable('#data-table',columns,$url);
+        console.log(columns);
+
+    }
+    updateTable("/windows");
+
+    $('#checkBox').change(function() {
+        checkFilter();   
+    });
+    $('#floors').change(function() {
+       checkFilter();
+    });
+    function checkFilter(){
+        let check = $('#checkBox').is(":checked");
+        let floor = $('#floors').val();
+        console.log(check);
+        console.log(floor);
+        if(floor == "All"){
+                if(check){
+                    updateTable("/windowsOpen");
+                }else{
+                    updateTable("/windows");
+                }
+
+        }else{
+            if(check){
+                    updateTable("/windowsOpen/"+floor);
+            }else{
+                    updateTable("/windows/"+floor);
+            }
+        }
+    }
+});
+</script>
+<%- include('template/footer'); %>

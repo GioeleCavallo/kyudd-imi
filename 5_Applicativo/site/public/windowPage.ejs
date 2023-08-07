@@ -1,0 +1,80 @@
+<%- include('template/header'); %>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+
+    <h1 id="title" class="title-color"></h1>
+    <hr class="big-line">
+    <h5 id="open-window" class="stats-window">Aperta</h5>
+    <h5 id="close-window" class="stats-window">Chiusa</h5>
+    <br><br>
+    <h1 id="subtitle">Stati finestra</h1>
+    <hr class="normal-line">
+    
+    <table id="data-table" class="display">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Stato</th>
+                <th>Data</th>
+                <th>Finestra</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <% if(classroom) { %>
+        <script>
+            const CLASSROOM = <%= classroom %> ;
+            const WINDOW = <%= window %> ;
+        </script>
+        <% } %>
+
+
+        <script>
+
+        $(document).ready(() => {
+            $("#title").text(`Finestra ${CLASSROOM}-${WINDOW}`);
+
+            
+            function updateTable() {
+                let columns = JSON.parse('[{"data": "id"}, {"data": "stato"}, {"data": "timestamp"}, {"data": "finestra_numero"}]');
+                createTable('#data-table',columns,`/window/${CLASSROOM}/${WINDOW}`);
+            }
+            updateTable();
+            setInterval(() =>{
+                $.get(`/window/${CLASSROOM}/${WINDOW}`, function(data, status){
+                let deltaOpen = 0;
+                let deltaClosed = 0;
+                console.log("data: " + data.length);
+                for($i = 0; $i < data.length; $i++){
+                    let obj = data[$i];
+                    let nextTime;    
+                    if($i +1 == data.length ){
+                        nextTime = new Date(); 
+                    }else{
+                        nextTime = new Date(formatDateTime(data[$i+1].timestamp));
+                    }
+                    
+                    let objDate = new Date(formatDateTime(obj.timestamp))
+
+                    if(obj.stato == 1){
+                        let delta = nextTime - objDate ;
+                        deltaOpen += delta;
+                    }else{
+                        let delta = nextTime - objDate; 
+                        deltaClosed += delta;
+                    }
+                }
+           
+                $("#open-window").text(`Aperta ${stringDateTime(deltaOpen)}`);
+                $("#close-window").text(`Chiusa ${stringDateTime(deltaClosed)}`);
+            }); }, 100);
+        });
+    </script>
+    <%- include('template/footer'); %>
